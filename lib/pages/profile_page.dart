@@ -58,7 +58,23 @@ class _ProfilePageState extends State<ProfilePage> {
     final profileWithUsername = p != null ? Map<String, dynamic>.from(p) : <String, dynamic>{};
     profileWithUsername['username'] = username;
 
-    final f = await db.listFeedback(category: 'saran_kesan');
+    var f = await db.listFeedback(category: 'saran_kesan');
+
+    // Set default feedback jika belum ada
+    if (f.isEmpty) {
+      // Tambah default kesan
+      await db.addFeedback(
+        category: 'saran_kesan',
+        content: 'Matkulnya seru bos',
+      );
+      // Tambah default saran
+      await db.addFeedback(
+        category: 'saran_kesan',
+        content: 'Coba challangenya lebih seru tapi aku duluan',
+      );
+      f = await db.listFeedback(category: 'saran_kesan');
+    }
+
     setState(() {
       _profile = profileWithUsername;
       _feedback = f;
